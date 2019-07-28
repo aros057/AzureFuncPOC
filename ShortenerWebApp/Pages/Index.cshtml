@@ -1,0 +1,138 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+
+<div class="text-center">
+    <div class="container">
+        <h1 class="display-4 mb-4">Short URL service</h1>
+        @*<hr>*@
+        <form id="submitMessage">
+            <div class="form-group">
+                <input type="text" id="urlfullname" class="form-control" placeholder="Paste full URL here...">
+            </div>
+            <input type="submit" class="btn btn-secondary" value="Get short version">
+        </form>
+        <br>
+        <br>
+        <div id="output"></div>
+        <br>
+        <br>
+        <form id="submitMessageShort">
+            <div class="form-group2">
+                <input type="text" id="urlshortname" class="form-control" placeholder="Paste short URL here...">
+            </div>
+            <input type="submit" class="btn btn-secondary" value="Get original URL">
+        </form>
+        <br>
+        <br>
+        <div id="outputInflate"></div>
+    </div>
+
+    <script>
+        document.getElementById('submitMessage').addEventListener('submit', submitMessage);
+        document.getElementById('submitMessageShort').addEventListener('submit', submitMessageShort);
+
+        function processResponse(response, urlfull) {
+            if (response.status === 200) {
+                response.text().then(function (shorturl) {
+                    
+                    output =
+                    `
+                    <div class="alert alert-primary" role="alert">
+                         ${urlfull} was shortened to this following URL:
+                    </div> 
+                     <div class="input-group">
+                        <input type="text" class="form-control"
+                            value="${shorturl}"  id="copy-output">
+                        <span class="input-group-btn">
+                          <button class="btn btn-default" type="button" id="copy-button"
+                              data-toggle="tooltip" data-placement="button"
+                              title="Copy to Clipboard">
+                            Copy
+                          </button>
+                        </span>
+                      </div>
+                      <br>
+                      <br>
+                    `;
+                    document.getElementById('output').innerHTML = output;
+                    document.getElementById('urlfullname').value = ''; //reset placeholder
+                });
+            } else {
+                output =
+                `
+                <div class="alert alert-danger" role="alert">
+                    Something went wrong
+                </div>        
+                `;
+                document.getElementById('output').innerHTML = output;
+            }
+        }
+
+        function processResponseInflate(response, urlshort) {
+            if (response.status === 200) {
+                response.text().then(function (fullurl) {
+                     
+                    output =
+                        `
+                    <div class="alert alert-primary" role="alert">
+                         ${urlshort} is the short form to this following URL:
+                    </div> 
+                     <div class="input-group">
+                        <input type="text" class="form-control"
+                            value="${fullurl}"  id="copy-output">
+                        <span class="input-group-btn">
+                          <button class="btn btn-default" type="button" id="copy-button"
+                              data-toggle="tooltip" data-placement="button"
+                              title="Copy to Clipboard">
+                            Copy
+                          </button>
+                        </span>
+                      </div>
+                      <br>
+                      <br>
+                    `;
+                    document.getElementById('outputInflate').innerHTML = output;
+                    document.getElementById('urlshortname').value = ''; //reset placeholder
+                });
+            } else {
+                output =
+                    `
+                <div class="alert alert-danger" role="alert">
+                    Something went wrong
+                </div>        
+                `;
+                document.getElementById('outputInflate').innerHTML = output;
+            }
+        }
+
+
+        function submitMessage(e) {
+            e.preventDefault();
+
+            let urlfull = document.getElementById('urlfullname').value;
+            fetch('https://aros057.azurewebsites.net/api/FunctionShorten?UrlFull=' + urlfull, {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json, text/plain, */*'
+                }
+            })
+                .then((res) => processResponse(res, urlfull))
+        }
+
+        function submitMessageShort(e) {
+            e.preventDefault();
+
+            let urlshort = document.getElementById('urlshortname').value;
+            fetch('https://aros057.azurewebsites.net/api/FunctionInflate?UrlShort=' + urlshort, {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json, text/plain, */*'
+                }
+            })
+                .then((res) => processResponseInflate(res, urlshort))
+        }
+    </script>
+</div>
