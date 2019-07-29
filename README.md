@@ -8,6 +8,14 @@ The simple API consists of 3 functions:
   FunctionRedirect  - Redirects browser to a full URL when a short version is provided    
   FunctionInflate   - Returns a full URL when a short version is provided   
 
+Azure Examples:
+
+  https://aros057.azurewebsites.net/api/FunctionShorten?UrlFull=https://www.google.com
+  
+  https://aros057.azurewebsites.net/api/FunctionInflate?UrlShort=1q
+  
+  https://aros057.azurewebsites.net/api/FunctionRedirect?UrlShort=1q
+
 Examples(running on a local machine):
 
     http://localhost:7071/api/FunctionShorten?UrlFull=https://www.google.com
@@ -23,6 +31,7 @@ Examples(running on a local machine):
     
   Publishing to Azure. Continuos delivery enabled for these projects to publish to Azure automatically.
   Alternatively, publish from Visual Studio.
+ 
 
   
   # Web Application
@@ -36,7 +45,7 @@ Examples(running on a local machine):
   # Limitations & Improvements
   FunctionShorten does not checks the database whether input URL already exists in short form.
   
-  Names and URLs for the service can be mapped by proxy, however this requires paid Azure account
+  Service names are way too long. So our service is not much of a shortener. Names and URLs for the service can be mapped by proxy to form a small URL, however this requires paid Azure account
   
   
   
