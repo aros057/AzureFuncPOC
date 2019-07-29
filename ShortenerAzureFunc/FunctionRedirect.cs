@@ -1,13 +1,10 @@
 using System;
-using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
-using Microsoft.Azure.Cosmos.Table;
 
 namespace AzureFuncPOC
 {
@@ -26,31 +23,15 @@ namespace AzureFuncPOC
                 return new BadRequestObjectResult("No input short URL");
             }
 
-
-            //prepare tables
-            //CloudTable tableUrl = Common.CreateTable(Common.tableNameURL);
-            //string partitionKey = UrlShort.Substring(0, 1);
-            //TableOperation retrieveOperation = TableOperation.Retrieve<UrlEntity>(partitionKey, UrlShort);
-            //TableResult result = await tableUrl.ExecuteAsync(retrieveOperation);
-            //UrlEntity entity = result.Result as UrlEntity;
             try
             {
                 string urlfull = await Common.InflateURLAsync(urlshort);
-                return new RedirectResult(urlfull, true, true); //redirect perm & preserve
+                return new RedirectResult(urlfull, true); //redirect permanently
             }
             catch
             {
                 return new BadRequestObjectResult("Bad link");
             }
-
-            //if (entity==null || string.IsNullOrEmpty(entity.UrlFull) )
-            //{
-            //    return new BadRequestObjectResult("Bad link");
-            //}
-            //else
-            //{
-            //    return new RedirectResult(entity.UrlFull, true, true); //redirect perm & preserve
-            //}
         }
     }
 }

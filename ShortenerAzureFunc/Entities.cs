@@ -1,6 +1,4 @@
-﻿using Microsoft.WindowsAzure.Storage.Table;
-
-namespace AzureFuncPOC
+﻿namespace AzureFuncPOC
 {
     using Microsoft.Azure.Cosmos.Table;
 

@@ -5,7 +5,6 @@ namespace AzureFuncPOC
   
     using System.Threading.Tasks;
     using Microsoft.Azure.Cosmos.Table;
-    using Microsoft.Azure.Documents;
 
     public static class Common
     {
@@ -57,57 +56,38 @@ namespace AzureFuncPOC
 
         public static async Task<string> InflateURLAsync (string urlshort)
         {
-            try
+            //url short has form something like this: 
+            //aros057.azurewebsites.net/api/FunctionRedirect?UrlShort=Y
+            //the last bit is the token to look in the DB. 
+            urlshort = urlshort.Substring(urlshort.LastIndexOf("=") + 1);
+
+            //prepare tables
+            CloudTable tableUrl = Common.CreateTable(Common.tableNameURL);
+            string partitionKey = urlshort.Substring(0, 1);
+            TableOperation retrieveOperation = TableOperation.Retrieve<UrlEntity>(partitionKey, urlshort);
+            TableResult result = await tableUrl.ExecuteAsync(retrieveOperation);
+            UrlEntity entity = result.Result as UrlEntity;
+            if (entity == null || string.IsNullOrEmpty(entity.UrlFull))
             {
-                //prepare tables
-                CloudTable tableUrl = Common.CreateTable(Common.tableNameURL);
-                string partitionKey = urlshort.Substring(0, 1);
-                TableOperation retrieveOperation = TableOperation.Retrieve<UrlEntity>(partitionKey, urlshort);
-                TableResult result = await tableUrl.ExecuteAsync(retrieveOperation);
-                UrlEntity entity = result.Result as UrlEntity;
-                if (entity == null || string.IsNullOrEmpty(entity.UrlFull))
-                {
-                    throw new Exception("Bad link");
-                }
-                else
-                {
-                    return entity.UrlFull;
-                }
+                throw new Exception("Bad link");
             }
-            catch
+            else
             {
-                throw;
+                return entity.UrlFull;
             }
         }
 
 
         public static async Task<TableEntity> InsertOrMergeEntityAsync(CloudTable table, TableEntity entity)
         {
-            if (entity == null)
-            {
-                throw new ArgumentNullException("entity");
-            }
-            try
-            {
-                // Create the InsertOrReplace table operation
-                TableOperation insertOrMergeOperation = TableOperation.InsertOrMerge(entity);
+            // Create the InsertOrReplace table operation
+            TableOperation insertOrMergeOperation = TableOperation.InsertOrMerge(entity);
 
-                // Execute the operation.
-                TableResult result = await table.ExecuteAsync(insertOrMergeOperation);
-                TableEntity insertedVal = result.Result as TableEntity;
+            // Execute the operation.
+            TableResult result = await table.ExecuteAsync(insertOrMergeOperation);
+            TableEntity insertedVal = result.Result as TableEntity;
 
-                // Get the request units consumed by the current operation. RequestCharge of a TableResult is only applied to Azure CosmoS DB 
-                if (result.RequestCharge.HasValue)
-                {
-                    Console.WriteLine("Request Charge of InsertOrMerge Operation: " + result.RequestCharge);
-                }
-
-                return insertedVal;
-            }
-            catch (StorageException e)
-            {
-                throw;
-            }
+            return insertedVal;
         }
 
 

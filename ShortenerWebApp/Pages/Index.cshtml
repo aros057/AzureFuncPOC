@@ -23,6 +23,7 @@
             <div class="form-group2">
                 <input type="text" id="urlshortname" class="form-control" placeholder="Paste short URL here...">
             </div>
+            <br>
             <input type="submit" class="btn btn-secondary" value="Get original URL">
         </form>
         <br>
@@ -46,13 +47,6 @@
                      <div class="input-group">
                         <input type="text" class="form-control"
                             value="${shorturl}"  id="copy-output">
-                        <span class="input-group-btn">
-                          <button class="btn btn-default" type="button" id="copy-button"
-                              data-toggle="tooltip" data-placement="button"
-                              title="Copy to Clipboard">
-                            Copy
-                          </button>
-                        </span>
                       </div>
                       <br>
                       <br>
@@ -77,34 +71,38 @@
                      
                     output =
                         `
-                    <div class="alert alert-primary" role="alert">
-                         ${urlshort} is the short form to this following URL:
-                    </div> 
-                     <div class="input-group">
-                        <input type="text" class="form-control"
-                            value="${fullurl}"  id="copy-output">
-                        <span class="input-group-btn">
-                          <button class="btn btn-default" type="button" id="copy-button"
-                              data-toggle="tooltip" data-placement="button"
-                              title="Copy to Clipboard">
-                            Copy
-                          </button>
-                        </span>
-                      </div>
-                      <br>
-                      <br>
-                    `;
+                        <div class="alert alert-primary" role="alert">
+                             ${urlshort} is the short form to this following URL:
+                        </div> 
+                         <div class="input-group">
+                            <input type="text" class="form-control"
+                                value="${fullurl}"  id="copy-output">
+                          </div>
+                          <br>
+                          <br>
+                        `;
+                    //todo - copy button
+                    //<span class="input-group-btn">
+                    //    <button class="btn btn-default" type="button" id="copy-button"
+                    //        data-toggle="tooltip" data-placement="button"
+                    //        title="Copy to Clipboard">
+                    //        Copy
+                    //      </button>
+                    //</span>
                     document.getElementById('outputInflate').innerHTML = output;
                     document.getElementById('urlshortname').value = ''; //reset placeholder
                 });
             } else {
-                output =
-                    `
-                <div class="alert alert-danger" role="alert">
-                    Something went wrong
-                </div>        
-                `;
-                document.getElementById('outputInflate').innerHTML = output;
+
+                response.text().then(function (errordesc) {
+                    output =
+                        `
+                        <div class="alert alert-danger" role="alert">
+                             ${errordesc}
+                        </div>        
+                        `;
+                    document.getElementById('outputInflate').innerHTML = output;
+                });                
             }
         }
 
@@ -113,6 +111,9 @@
             e.preventDefault();
 
             let urlfull = document.getElementById('urlfullname').value;
+            if (urlfull.length == 0) {
+                return;
+            }
             fetch('https://aros057.azurewebsites.net/api/FunctionShorten?UrlFull=' + urlfull, {
                 method: 'GET',
                 headers: {
@@ -126,6 +127,9 @@
             e.preventDefault();
 
             let urlshort = document.getElementById('urlshortname').value;
+            if (urlshort.length == 0) {
+                return;
+            }
             fetch('https://aros057.azurewebsites.net/api/FunctionInflate?UrlShort=' + urlshort, {
                 method: 'GET',
                 headers: {
