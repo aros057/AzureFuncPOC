@@ -21,16 +21,23 @@ Examples(running on a local machine):
     response(plain text):
     https://www.google.com
     
-  
+  Publishing to Azure. Continuos delivery enabled for these projects to publish to Azure automatically.
+  Alternatively, publish from Visual Studio.
+
   
   # Web Application
-  Front end is a standard ASP .NET Core Web Application. The API is consumed by the JavaScript in the main page:
+  Front end is a standard ASP .NET Core Web Application. The API is consumed directly by the JavaScript in the main page:
   Pages\Index.cshtml
+  Web Application URL:  http://aros057tiny.azurewebsites.net/
   
-  
-  
+  # Unit test project
+  XUnit framework used for unit tests. In fact, these are integration tests.
     
-  # Limitations
-  FunctionShorten does not checks the database whether input URL already exists in short form. 
+  # Limitations & Improvements
+  FunctionShorten does not checks the database whether input URL already exists in short form.
+  
+  Names and URLs for the service can be mapped by proxy, however this requires paid Azure account
+  
+  
   
   
