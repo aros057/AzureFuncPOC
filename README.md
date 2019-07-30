@@ -45,6 +45,8 @@ Examples(running on a local machine):
   # Limitations & Improvements
   FunctionShorten does not checks the database whether input URL already exists in short form.
   
+  Full URLs must include http or https prefix. I am planning to append http if it is not present (like tinyUrl does)
+  
   Service names are way too long. So our service is not much of a shortener. Names and URLs for the service can be mapped by proxy to form a small URL, however this requires paid Azure account
   
   
