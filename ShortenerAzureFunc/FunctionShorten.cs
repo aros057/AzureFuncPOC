@@ -26,6 +26,11 @@ namespace AzureFuncPOC
             if (start>=0)
             {
                 UrlFull = qry.Substring(start + param.Length); //manually search for the full URL
+                //append 'http' protocol if none is specified
+                if (!UrlFull.Contains("://"))
+                {
+                    UrlFull = "http://" + UrlFull;
+                }
             }
             if (string.IsNullOrEmpty(UrlFull))
             {
