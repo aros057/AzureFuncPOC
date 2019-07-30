@@ -29,8 +29,11 @@ Examples(running on a local machine):
     response(plain text):
     https://www.google.com
     
+    
   Publishing to Azure. Continuos delivery enabled for these projects to publish to Azure automatically.
   Alternatively, publish from Visual Studio.
+  
+  Shortening function will appeng 'http' automatically where URLs do not specify any protocol.
  
 
   
@@ -44,10 +47,8 @@ Examples(running on a local machine):
     
   # Limitations & Improvements
   FunctionShorten does not checks the database whether input URL already exists in short form.
-  
-  Full URLs must include http or https prefix. I am planning to append http if it is not present (like tinyUrl does)
-  
-  Service names are way too long. So our service is not much of a shortener. Names and URLs for the service can be mapped by proxy to form a small URL, however this requires paid Azure account
+   
+  Function service names are way too long. So our service is not much of a shortener. Names and URLs for the service can be mapped by proxy to form a small URL, however this requires paid Azure account
   
   
   
